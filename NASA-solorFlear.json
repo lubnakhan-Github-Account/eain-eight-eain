@@ -1,0 +1,169 @@
+{
+  "name": "NASA-solorFlear",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "weeks",
+              "triggerAtDay": [
+                1
+              ],
+              "triggerAtHour": 9
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "39d2ebb3-5db9-43f6-b5bc-d08b609d93a3",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "resource": "donkiSolarFlare",
+        "additionalFields": {
+          "startDate": "={{ $today.minus(7,'days') }}"
+        }
+      },
+      "type": "n8n-nodes-base.nasa",
+      "typeVersion": 1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "ce38244f-f25b-488d-9a2d-ed40d565e4e3",
+      "name": "Get a DONKI solar flare",
+      "credentials": {
+        "nasaApi": {
+          "id": "BpCy4JTXRIOySPQq",
+          "name": "NASA account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "7960717d-1d2b-412d-8331-f02d111cf1b8",
+              "leftValue": "={{ $json.classType }}",
+              "rightValue": "V",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        416,
+        0
+      ],
+      "id": "2f2a24f8-80e2-41af-9bbd-5bece5769406",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "resource": "request",
+        "binId": "1756042641285-4905372129287",
+        "requestId": "1756042827647-7840107616502",
+        "requestOptions": {}
+      },
+      "type": "n8n-nodes-base.postBin",
+      "typeVersion": 1,
+      "position": [
+        624,
+        -80
+      ],
+      "id": "1b57a6c8-83d4-486e-8c7c-210234370fe0",
+      "name": "TRUE Result"
+    },
+    {
+      "parameters": {
+        "resource": "request",
+        "binId": "1756042641285-4905372129287",
+        "requestId": "1756043419080-3611180519219",
+        "requestOptions": {}
+      },
+      "type": "n8n-nodes-base.postBin",
+      "typeVersion": 1,
+      "position": [
+        736,
+        16
+      ],
+      "id": "e3a0df1e-1024-49ff-8abf-372fe1692a3e",
+      "name": "FALSE Result1"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get a DONKI solar flare",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a DONKI solar flare": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "TRUE Result",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "FALSE Result1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "4c408c78-b129-45a5-8372-b639cf44e7c7",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "a9978f20cfe6bab34633c8306b1cb6ef1820eb1b6680b7cd37d15162932bc635"
+  },
+  "id": "Dbs9HqsjU4JBzB2a",
+  "tags": []
+}
